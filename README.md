@@ -18,7 +18,6 @@ you only need docker installed
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
 ```
 docker run -it --rm -v $(pwd):/usr/src/app -w /usr/src/app juanitomint/headless:erbuim npm run test
 ```
