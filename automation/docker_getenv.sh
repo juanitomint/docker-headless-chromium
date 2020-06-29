@@ -1,12 +1,6 @@
 #!/bin/bash
-
 # check version
-if [ -z "$VERSION" ]
-      then
-      VERSION=`jq -r '.version' ./package.json`
-      
-fi
-
+source ./automation/printTable.sh
 if [ -z "$NAMESPACE" ]; then
     
     NAMESPACE=$(cat ./automation/NAMESPACE)
@@ -24,6 +18,12 @@ else
   BRANCH_NAME=$GIT_BRANCH
 fi
 
+if [ -z "$VERSION" ]
+      then
+      VERSION=$BRANCH_NAME
+      
+fi
+
 # check repository
 if [ -z "$REPOSITORY" ]
 then
@@ -33,7 +33,7 @@ fi
 # check registry if not present then set to gitlab ECR
 if [ -z "$REGISTRY" ]
 then
-      REGISTRY="dockerhub.com"
+      REGISTRY=""
 fi
 
 # check git user
@@ -51,13 +51,20 @@ if [ -z "$GITLAB_USER_EMAIL" ]
             GIT_USER_EMAIL=$GITLAB_USER_EMAIL
 fi
 # echo result
-echo -e "\e[1;34m
-BRANCH_NAME is:\t$BRANCH_NAME 
-NAMESPACE is:\t$NAMESPACE 
-REGISTRY is:\t$REGISTRY 
-REPOSITORY is:\t$REPOSITORY 
-VERSION is:\t$VERSION 
-GIT_USER is:\t$GIT_USER 
-GIT_USER_EMAIL:\t$GIT_USER_EMAIL \e[0m \n\n\n"
+echo -e "\e[1;34m"
+printTable ',' "$(cat <<EOF
+VAR,VALUE
+BRANCH_NAME,$BRANCH_NAME 
+NAMESPACE,$NAMESPACE 
+REGISTRY,$REGISTRY 
+REPOSITORY,$REPOSITORY 
+VERSION,$VERSION 
+GIT_USER,$GIT_USER 
+GIT_USER_EMAIL,$GIT_USER_EMAIL 
+EOF
+)
+"
 
+
+echo -e "\e[0m \n\n\n"
 set +x
